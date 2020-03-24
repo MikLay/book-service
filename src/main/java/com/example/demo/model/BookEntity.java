@@ -7,11 +7,11 @@ import javax.persistence.*;
 @Entity
 @Table(name = "book")
 @NamedQueries({
-        @NamedQuery(query = "select  u from Book u where u.title = :title", name = Book.FIND_BY_TITLE)
+        @NamedQuery(query = "select  u from BookEntity u where u.title = :title", name = BookEntity.FIND_BY_TITLE)
 })
 @RequiredArgsConstructor
 @Data
-public class Book {
+public class BookEntity {
 
     public static final String FIND_BY_TITLE = "Book.FIND_BY_TITLE";
 
