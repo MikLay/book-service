@@ -1,14 +1,16 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.BookEntity;
+import com.example.demo.model.dto.SearchDTO;
 import com.example.demo.repository.BookService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 public class BookController {
 
     private final BookService bookService;
@@ -18,39 +20,26 @@ public class BookController {
     }
 
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String bookControllerGetAll(Model model) {
-        List<BookEntity> books = bookService.findAllBooks();
-        model.addAttribute("books", books);
-        return "index";
-    }
-
-    @RequestMapping(value = "/book-search", method = {RequestMethod.POST, RequestMethod.GET})
-    public String bookControllerGetAllByTitle(@RequestParam String title, Model model) {
-        List<BookEntity> books = bookService.findAllByTitle(title);
-        model.addAttribute("books", books);
-        return "book-search";
+    @RequestMapping(value = "/search", method = {RequestMethod.POST})
+    public ResponseEntity<List<BookEntity>> bookControllerGetAllByTitle(@RequestBody final SearchDTO searchDTO) {
+        return ResponseEntity.ok(bookService.findAllByCriteria(searchDTO.getSearchType(), searchDTO.getSearchWord()));
     }
 
 
-    @RequestMapping(value = "/book-add", method = RequestMethod.GET)
-    public String bookFormControllerGet(Model model) {
-        model.addAttribute("bookModel", new BookEntity());
-        return "book-add";
+    @ResponseBody
+    @GetMapping(value = "/books")
+    public List<BookEntity> bookFormControllerGet() {
+        return bookService.findAllBooks();
     }
 
-    @RequestMapping(value = "/book-add", method = RequestMethod.POST)
-    public String bookFormControllerPost(@ModelAttribute BookEntity bookModel, Model model) {
-        model.addAttribute("bookModel", bookModel);
-        bookService.createBook(bookModel);
-        return "redirect:/";
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public ResponseEntity<BookEntity> bookFormControllerPost(@RequestBody final BookEntity bookModel) {
+        return ResponseEntity.ok(bookService.createBook(bookModel));
     }
 
-    @RequestMapping(value = "/book/{bookId}")
-    public String getData(@PathVariable("bookId") Integer bookId, Model model) {
-        BookEntity book = bookService.getBookById(bookId);
-        model.addAttribute("book", book);
-        return "book-details";
+    @RequestMapping(value = "/books/{bookId}")
+    public ResponseEntity<BookEntity> getData(@PathVariable("bookId") Integer bookId) {
+        return ResponseEntity.ok(bookService.getBookById(bookId));
     }
 
 }
