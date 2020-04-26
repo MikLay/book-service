@@ -16,7 +16,7 @@ public class BookEntity {
     public static final String FIND_BY_TITLE = "Book.FIND_BY_TITLE";
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 

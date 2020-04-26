@@ -1,134 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en " xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Book Service</title>
+    <title>Index</title>
 </head>
-<body>
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<div>
-    <h5>Add book to DB:</h5>
-    <form id="createBook" method="post">
-        <br/>
-        <label>Title:
-            <input name="title" type="text">
-        </label>
-        <br/>
-        <label>ISBN:
-            <input name="isbn" type="text"/>
-        </label>
-        <br/>
-        <label>Author:
-            <input name="author" type="text"/>
-        </label>
-        <br/>
-        <label>Page:
-            <input name="page" type="text">
-        </label>
-        <br/>
-        <button type="submit">Send</button>
-    </form>
-</div>
+<ul>
+    <li><a href="/">Main page</a></li>
+    <li><a href="/book_catalog">Book catalog</a></li>
+    <li>
+        <a href="/login">Login page</a>
+    </li>
+    <li th:if="${#authorization.expression('isFullyAuthenticated()')}"><a href="/profile" >Profile</a></li>
+</ul>
 
-<div>
-    <h4>Books Table</h4>
-    <table>
-        <thead>
-        <th>id</th>
-        <th>title</th>
-        <th>isbn</th>
-        <th>author</th>
-        <th>page</th>
-        </thead>
-        <tbody id="bookTable">
-        </tbody>
-    </table>
-</div>
-<div>
-    <h4>Searching parameters</h4>
-    <form id="doSearch" method="post">
-        <br>
-        <label>Search:
-            <select name="select" placeholder="Choose filter">
-                <option th:value="title">Title</option>
-                <option th:value="author">Author</option>
-                <option th:value="isbn">ISBN</option>
-            </select>
-        </label>
-        <input type="text" name="searchWord">
-        <button type="submit">Search</button>
-
-    </form>
-</div>
-<script>
-    $(document).ready(
-        function () {
-            $('#createBook').submit(function (e) {
-                e.preventDefault();
-
-                $.ajax({
-                    type: 'POST',
-                    url: '/add',
-                    dataType: 'json',
-                    data: JSON.stringify({
-                        title: $(this).find('[name=title]').val(),
-                        isbn: $(this).find('[name=isbn]').val(),
-                        author: $(this).find('[name=author]').val(),
-                        page: $(this).find('[name=page]').val()
-                    }),
-                    beforeSend: function (xhr) {
-                        xhr.setRequestHeader('Content-Type', 'application/json');
-                    },
-                    success: function () {
-                        loadBooks();
-                    }
-                })
-            });
-
-            $('#doSearch').submit(function (e) {
-                e.preventDefault();
-
-                $.ajax({
-                    type: 'POST',
-                    url: '/search',
-                    dataType: 'json',
-                    data: JSON.stringify({
-                        searchWord: $(this).find('[name=searchWord]').val(),
-                        searchType: $(this).find('[name=select]').val()
-                    }),
-                    beforeSend: function (xhr) {
-                        xhr.setRequestHeader('Content-Type', 'application/json');
-                    },
-                    success: function (response) {
-                        console.log(response);
-                        setBooks(response);
-                    }
-                })
-
-            });
-
-            loadBooks();
-        });
-
-    function loadBooks() {
-        $.ajax({
-                url: '/books',
-                success: (response) => (setBooks(response))
-            }
-        )
-    }
-
-    function setBooks(data) {
-        let $books = $('#bookTable');
-
-        $books.empty();
-        data.forEach(book => {
-            $books.append('<tr><td>' + book.id + '</td><td>' + book.title + '</td><td>'
-                + book.isbn + '</td><td>' + book.author + '</td><td>' + book.page + '</td></tr>');
-        })
-    }
-
-
-</script>
-</body>
 </html>

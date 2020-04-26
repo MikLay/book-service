@@ -1,0 +1,68 @@
+<html lang="en">
+<head>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+
+    <title>My login page</title>
+</head>
+<body>
+<div class="container d-flex flex-column">
+    <div class="card">
+        <div class="card-body">
+            <div class="card-title"><h3>Login form</h3></div>
+            <form id="loginForm">
+                <input name="login" placeholder="Login">
+                <input name="password" type="password" placeholder="Password">
+                <button type="submit" class="btn btn-primary">Log in</button>
+                <button id="logout" class="btn btn-danger">Logout</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+    $(function () {
+        $('#loginForm').submit(function (e) {
+            e.preventDefault();
+
+
+            $.ajax({
+                type: 'POST',
+                url: '/login',
+                dataType: 'json',
+                data: JSON.stringify({
+                    login: $(this).find('[name=login]').val(),
+                    password: $(this).find('[name=password]').val()
+                }),
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Content-Type', 'application/json')
+                },
+                success: function (response) {
+                    window.location.href = window.location.origin + "/profile";
+
+
+                },
+                error: function (response) {
+                    console.log(response);
+                }
+            });
+        });
+
+
+        $('#logout').click(function () {
+
+            $.ajax({
+                url: '/logout',
+                success: function () {
+                    window.location.href = window.location.origin + "/";
+                },
+                error: function (xhr) {
+                    console.log(JSON.stringify(xhr.responseJSON, null, 4));
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

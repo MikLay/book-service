@@ -1,6 +1,7 @@
-package com.example.demo.repository;
+package com.example.demo.service;
 
 import com.example.demo.model.BookEntity;
+import com.example.demo.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -33,16 +34,12 @@ public class BookService {
     @Transactional
     public List<BookEntity> findAllByCriteria(String criteria, String searchWord) {
         System.out.println(findAllByTitle(searchWord));
-        switch (criteria) {
-            case "title":
-                return findAllByTitle(searchWord);
-            case "author":
-                return findAllByAuthor(searchWord);
-            case "isbn":
-                return findAllByIsbn(searchWord);
-            default:
-                return findAllBooks();
-        }
+        return switch (criteria) {
+            case "title" -> findAllByTitle(searchWord);
+            case "author" -> findAllByAuthor(searchWord);
+            case "isbn" -> findAllByIsbn(searchWord);
+            default -> findAllBooks();
+        };
     }
 
     @Transactional

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" xmlns:th="http://www.thymeleaf.org">
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <title>Title</title>
+</head>
+<body>
+<div class="container d-flex flex-column">
+    <div class="card">
+        <div class="card-body"><h4 class="card-title">Books You Liked</h4>
+            <table class="table table-dark">
+                <thead>
+                <th>id</th>
+                <th>title</th>
+                <th>isbn</th>
+                <th>author</th>
+                <th>page</th>
+                <th>action</th>
+                </thead>
+                <tbody id="likedBookTable">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <ul>
+        <li><a href="/">Main page</a></li>
+        <li><a href="/book_catalog">Book catalog</a></li>
+    </ul>
+</div>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+    $(document).ready(
+        function () {
+            loadUsersLikedBooks();
+        });
+
+    function loadUsersLikedBooks() {
+        $.ajax({
+            url: '/liked-books',
+            success: function (response) {
+                setUserDetails(response);
+            }
+        });
+    }
+
+
+    function deleteBook(id) {
+        console.log(id)
+        $.ajax({
+            type: 'DELETE',
+            url: `/liked-books/${id}`,
+            dataType: 'json',
+            success: function (response) {
+                loadUsersLikedBooks(response);
+            }
+        });
+    }
+
+    function setUserDetails(data) {
+        let $likedBookTable = $('#likedBookTable');
+
+        $likedBookTable.empty();
+        data.forEach(book => {
+            $likedBookTable.append('<tr><td>' + book.id + '</td><td>' + book.title + '</td><td>'
+                + book.isbn + '</td><td>' + book.author + '</td><td>' + book.page + '</td><td>' +
+                '<button onClick="deleteBook(\'' + book.id + '\')" class="btn btn-danger">Delete</button></td></tr>');
+        })
+    }
+
+
+</script>
+</body>
+</html>
