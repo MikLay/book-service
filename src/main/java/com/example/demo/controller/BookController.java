@@ -1,22 +1,22 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.BookEntity;
+import com.example.demo.model.dto.BookDTO;
 import com.example.demo.model.dto.SearchDTO;
 import com.example.demo.service.BookService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 public class BookController {
 
     private final BookService bookService;
-
-    public BookController(BookService bookService) {
-        this.bookService = bookService;
-    }
 
 
     @RequestMapping(value = "/search", method = {RequestMethod.POST})
@@ -32,8 +32,15 @@ public class BookController {
 
     @PreAuthorize("hasAuthority('VIEW_ADMIN')")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ResponseEntity<BookEntity> bookFormControllerPost(@RequestBody final BookEntity bookModel) {
-        return ResponseEntity.ok(bookService.createBook(bookModel));
+    public ResponseEntity<BookDTO> bookFormControllerPost(@Valid @RequestBody final BookDTO bookModel) {
+
+        BookEntity bookEntity = bookService.createBook(bookModel.getTitle(), bookModel.getIsbn(), bookModel.getAuthor(), bookModel.getPage());
+        BookDTO bookDTO = new BookDTO();
+        bookDTO.setAuthor(bookEntity.getAuthor());
+        bookDTO.setIsbn(bookEntity.getIsbn());
+        bookDTO.setPage(bookEntity.getPage());
+        bookDTO.setTitle(bookEntity.getTitle());
+        return ResponseEntity.ok(bookDTO);
     }
 
     @RequestMapping(value = "/books/{bookId}")

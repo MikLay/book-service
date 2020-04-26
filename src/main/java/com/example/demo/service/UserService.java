@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.model.BookEntity;
+import com.example.demo.model.PermissionEntity;
 import com.example.demo.model.UserEntity;
 import com.example.demo.repository.BookRepository;
 import com.example.demo.repository.UserRepository;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -20,6 +22,18 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BookRepository bookRepository;
+
+
+    @Transactional
+    public UserEntity registerUser(final String username, final String password, final String customAuthField, final List<PermissionEntity> permissions) {
+        final UserEntity user = new UserEntity();
+        user.setLogin(username);
+        user.setPassword(password);
+        user.setCustomAuthField(customAuthField);
+        user.setLikedBooks(new HashSet<>());
+        user.setPermissions(permissions);
+        return userRepository.saveAndFlush(user);
+    }
 
     @Transactional
     public Set<BookEntity> getUsersLikedBooks(final String username) throws UsernameNotFoundException {

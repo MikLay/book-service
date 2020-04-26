@@ -40,6 +40,11 @@ public class PageController {
         return "login";
     }
 
+    @GetMapping("/register")
+    public String register() {
+        return "register";
+    }
+
     @RequestMapping(value = "/book/{bookId}")
     public String getData(@PathVariable("bookId") Integer bookId, Model model) {
         BookEntity book = bookService.getBookById(bookId);

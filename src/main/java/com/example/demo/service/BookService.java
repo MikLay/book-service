@@ -16,8 +16,13 @@ public class BookService {
     private final BookRepository bookRepository;
 
     @Transactional
-    public BookEntity createBook(BookEntity bookEntity) {
-        return bookRepository.saveAndFlush(bookEntity);
+    public BookEntity createBook(String title, String isbn, String author, String page) {
+        BookEntity book = new BookEntity();
+        book.setAuthor(author);
+        book.setIsbn(isbn);
+        book.setPage(page);
+        book.setTitle(title);
+        return bookRepository.saveAndFlush(book);
     }
 
     @Transactional

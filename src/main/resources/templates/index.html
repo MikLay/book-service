@@ -9,6 +9,9 @@
     <li>
         <a href="/login">Login page</a>
     </li>
+    <li >
+        <a href="/register">Register page</a>
+    </li>
     <li th:if="${#authorization.expression('isFullyAuthenticated()')}"><a href="/profile" >Profile</a></li>
 </ul>
 

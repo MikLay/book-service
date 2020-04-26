@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="container d-flex flex-column">
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex flex-row">
+                <div class="d-flex flex-column">
+                    <div class="card-title"><h3>Register</h3></div>
+                    <form id="registerForm">
+                        <label>Login or User Name
+                            <input name="username" placeholder="Username">
+                        </label>
+                        <label>Password
+                            <input name="password" type="password" placeholder="Password">
+                        </label>
+                        <label>Custom Field, Why not?)
+                            <input name="customAuthField" type="password" placeholder="Custom Auth">
+                        </label>
+                        <button type="submit" class="btn btn-primary">Show Me Heaven</button>
+                    </form>
+                </div>
+                <div class="d-flex flex-column" id="registerError">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+    $(document).ready(
+        function () {
+            $('#registerForm').submit(function (e) {
+                e.preventDefault();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/register',
+                    dataType: 'json',
+                    data: JSON.stringify({
+                        login: $(this).find('[name=username]').val(),
+                        password: $(this).find('[name=password]').val(),
+                        customAuthField: $(this).find('[name=customAuthField]').val(),
+                    }),
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Content-Type', 'application/json');
+                    },
+                    success: function () {
+                        window.location.href = window.location.origin + "/";
+                    },
+                    error: function (xhr) {
+                        let $formError = $('#registerError');
+                        $formError.empty();
+                        $formError.append('<p class="text-danger">' + JSON.stringify(xhr.responseJSON, null, 4) + '</p>');
+                    }
+                })
+            });
+
+        });
+</script>
+</body>
+</html>

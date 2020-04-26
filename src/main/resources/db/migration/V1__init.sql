@@ -41,10 +41,10 @@ create table user_to_liked_book
 );
 
 insert into book (TITLE, ISBN, AUTHOR, PAGE)
-VALUES ('Дюна', '2351', 'Франк Герберт', '300'),
-       ('Order by Fire', 'ad1451', 'Sarah Hawkswood', '250'),
-       ('White Fang', '61d23', 'Jack London', '310'),
-       ('Війна та Мир', '125s13', 'Лев Толстой', '1345');
+VALUES ('Дюна', 'ISBN-10 0-496-51068-9', 'Франк Герберт', '300'),
+       ('Order by Fire', '0 512 52068 9', 'Sarah Hawkswood', '250'),
+       ('White Fang', 'ISBN-10 0-596-52068-9', 'Jack London', '310'),
+       ('Війна та Мир', 'ISBN 978-0-136-54068-7', 'Лев Толстой', '1345');
 
 insert into users (login, password, custom_auth_field) values
 ('admin', 'password', 'admin custom auth field'),
